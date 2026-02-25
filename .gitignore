@@ -1,0 +1,9 @@
+# Visual Studio
+.vs/
+
+# Build
+bin/
+obj/
+
+# User secrets / env
+appsettings.Development.json
