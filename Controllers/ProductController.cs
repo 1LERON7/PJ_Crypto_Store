@@ -23,17 +23,35 @@ namespace Crypto_Store.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> ProductsGetAll()
+        public async Task<IActionResult> GetProducts(
+            int page = 1,
+            int pageSize = 10,
+            decimal? minPrice = null,
+            string? search = null)
         {
-            var products = await _db.Products.Select(p => new ProductDto
-            {
-                Title = p.Title,
-                Description = p.Description,
-                Price = p.PriceEth,
-                ImageURL = p.ImageUrl
-            }).ToListAsync();
+            var query = _db.Products.AsQueryable();
 
-            return Ok(products);
+            if (minPrice.HasValue)
+                query = query.Where(p => p.PriceEth >= minPrice);
+
+            if (!string.IsNullOrWhiteSpace(search))
+                query = query.Where(p => p.Title.Contains(search));
+
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            return Ok(new
+            {
+                totalCount,
+                page,
+                pageSize,
+                items
+            });
         }
 
         [HttpGet("{id}")]
@@ -76,5 +94,79 @@ namespace Crypto_Store.Controllers
 
             return Ok(product);
         }
+
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/title")]
+        public async Task<IActionResult> UpdateTitle(Guid id, [FromBody] string title)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+                return NotFound("Product is not found");
+
+            product.Title = title;
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/descripton")]
+        public async Task<IActionResult> UpdateDescrition(Guid id, [FromBody] string description)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+                return NotFound("Product is not found");
+
+            product.Description = description;
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/price")]
+        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] decimal price)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
+            if(product == null)
+                return NotFound("Product is not found");
+
+            product.PriceEth = price;
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPatch("{id}/image")]
+        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] string imageUrl)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            if (product == null)
+                return NotFound("Product is not found");
+
+            product.ImageUrl = imageUrl;
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpDelete("{id}/delete")]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
+            if(product == null)
+                return NotFound("Product is not found");
+
+            _db.Products.Remove(product);
+            await _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }
