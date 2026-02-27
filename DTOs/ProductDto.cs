@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Crypto_Store.DTO
+namespace Crypto_Store.DTOs
 {
     //    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),       // не для пользователя
     //title VARCHAR(50) NOT NULL,       // для пользователя
