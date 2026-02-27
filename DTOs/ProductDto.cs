@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using System.ComponentModel.DataAnnotations;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Crypto_Store.DTOs
@@ -12,9 +13,20 @@ namespace Crypto_Store.DTOs
     //created TIMESTAMP DEFAULT NOW()       // не для пользователя
     public class ProductDto
     {
-        public string title {  get; set; }
-        public string description { get; set; }
-        public float price {  get; set; }
-        public string image_URL {  get; set; }
+        // [Required(ErrorMessage = "катомный месседж")]
+        // атрибуты валидации. Супер темка для проверки!!!!
+        [Required]
+        [StringLength(50, MinimumLength = 5)]
+        public string Title { get; set; } = null!;
+
+        [StringLength(500)]
+        public string? Description { get; set; } = string.Empty;
+
+        [Required]
+        [Range(0.1, float.MaxValue)]
+        public decimal Price {  get; set; }
+
+        [Url]
+        public string? ImageURL {  get; set; } = string.Empty;
     }
 }

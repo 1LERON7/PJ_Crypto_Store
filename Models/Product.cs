@@ -11,7 +11,7 @@ public partial class Product
 
     public string? Description { get; set; }
 
-    public int PriceEth { get; set; }
+    public decimal PriceEth { get; set; }
 
     public string ImageUrl { get; set; } = null!;
 
