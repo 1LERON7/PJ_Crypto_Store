@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Crypto_Store.Models;
 
-public partial class User
+public partial class user
 {
     public Guid Id { get; set; }
 
@@ -13,9 +13,13 @@ public partial class User
 
     public string PasswordHash { get; set; } = null!;
 
-    public DateTime? Created { get; set; }
+    public DateTime Created { get; set; }
 
     public string? RefreshToken { get; set; }
 
     public DateTime? RefreshTokenExpiry { get; set; }
+
+    public virtual ICollection<order> Orders { get; set; } = new List<order>();
+
+    public virtual ICollection<product> Products { get; set; } = new List<product>();
 }

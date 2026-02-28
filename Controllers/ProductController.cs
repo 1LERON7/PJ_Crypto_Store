@@ -32,7 +32,7 @@ namespace Crypto_Store.Controllers
             var query = _db.Products.AsQueryable();
 
             if (minPrice.HasValue)
-                query = query.Where(p => p.PriceEth >= minPrice);
+                query = query.Where(p => p.Price >= minPrice);
 
             if (!string.IsNullOrWhiteSpace(search))
                 query = query.Where(p => p.Title.Contains(search));
@@ -62,7 +62,7 @@ namespace Crypto_Store.Controllers
                 {
                     Title = p.Title,
                     Description = p.Description,
-                    Price = p.PriceEth,
+                    Price = p.Price,
                     ImageURL = p.ImageUrl
                 }).FirstOrDefaultAsync();
 
@@ -81,11 +81,11 @@ namespace Crypto_Store.Controllers
             if (title)
                 return Conflict("A product with this name already exists.");
 
-            var product = new Product
+            var product = new product
             {
                 Title = dto.Title,
                 Description = dto.Description,
-                PriceEth = dto.Price,
+                Price = dto.Price,
                 ImageUrl = dto.ImageURL
             };
 
@@ -132,7 +132,7 @@ namespace Crypto_Store.Controllers
             if(product == null)
                 return NotFound("Product is not found");
 
-            product.PriceEth = price;
+            product.Price = price;
             await _db.SaveChangesAsync();
 
             return NoContent();

@@ -10,8 +10,8 @@ namespace Crypto_Store.DTOs
 
         public string Status { get; set; } = null!;
 
-        public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+        public virtual ICollection<payment> Payments { get; set; } = new List<payment>();
 
-        public virtual User? User { get; set; }
+        public virtual user? User { get; set; }
     }
 }

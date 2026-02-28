@@ -44,7 +44,7 @@ namespace Crypto_Store.Controllers
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password);
 
-            var user = new User
+            var user = new user
             {
                 Email = dto.Email,
                 PasswordHash = passwordHash,    // ХЭЭШ!!!  закодированный пароль + Соль.

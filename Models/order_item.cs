@@ -3,15 +3,19 @@ using System.Collections.Generic;
 
 namespace Crypto_Store.Models;
 
-public partial class payment
+public partial class order_item
 {
     public Guid Id { get; set; }
 
     public Guid OrderId { get; set; }
 
-    public string TxHash { get; set; } = null!;
+    public Guid ProductId { get; set; }
 
-    public DateTime Created { get; set; }
+    public decimal Price { get; set; }
+
+    public int Quantity { get; set; }
 
     public virtual order Order { get; set; } = null!;
+
+    public virtual product Product { get; set; } = null!;
 }
