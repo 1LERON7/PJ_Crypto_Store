@@ -5,21 +5,21 @@ namespace Crypto_Store.Models;
 
 public partial class user
 {
-    public Guid Id { get; set; }
+    public Guid id { get; set; }
 
-    public string Email { get; set; } = null!;
+    public string email { get; set; } = null!;
 
-    public string Role { get; set; } = null!;
+    public string role { get; set; } = null!;
 
-    public string PasswordHash { get; set; } = null!;
+    public string password_hash { get; set; } = null!;
 
-    public DateTime Created { get; set; }
+    public DateTime created { get; set; } = DateTime.UtcNow;
 
-    public string? RefreshToken { get; set; }
+    public string? refresh_token { get; set; }
 
-    public DateTime? RefreshTokenExpiry { get; set; }
+    public DateTime? refresh_token_time { get; set; } = DateTime.UtcNow;
 
-    public virtual ICollection<order> Orders { get; set; } = new List<order>();
+    public virtual ICollection<order> orders { get; set; } = new List<order>();
 
-    public virtual ICollection<product> Products { get; set; } = new List<product>();
+    public virtual ICollection<product> products { get; set; } = new List<product>();
 }

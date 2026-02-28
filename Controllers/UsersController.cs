@@ -33,16 +33,16 @@ namespace Crypto_Store.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            var user = await _db.users.FirstOrDefaultAsync(u => u.id == Guid.Parse(userId));
 
             if (user == null)
                 return NotFound();
 
             return Ok(new 
             {
-                user.Id,
-                user.Email,
-                user.Role
+                user.id,
+                user.email,
+                user.role
             });
         }
 
@@ -55,19 +55,19 @@ namespace Crypto_Store.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _db.Users.FindAsync(Guid.Parse(userId));
+            var user = await _db.users.FindAsync(Guid.Parse(userId));
             if (user == null)
                 return Unauthorized();
 
             // проверка старого пароля (хэш)
-            var isValid = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.PasswordHash);
+            var isValid = BCrypt.Net.BCrypt.Verify(dto.OldPassword, user.password_hash);
             if (isValid == false)
                 return BadRequest("Old password is incorrect");
 
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+            user.password_hash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
 
-            user.RefreshToken = null;
-            user.RefreshTokenExpiry = null;
+            user.refresh_token = null;
+            user.refresh_token_time = null;
 
             await _db.SaveChangesAsync();
 

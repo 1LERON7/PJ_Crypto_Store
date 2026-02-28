@@ -5,19 +5,19 @@ namespace Crypto_Store.Models;
 
 public partial class order
 {
-    public Guid Id { get; set; }
+    public Guid id { get; set; }
 
-    public Guid UserId { get; set; }
+    public Guid user_id { get; set; }
 
-    public decimal TotalPrice { get; set; }
+    public decimal total_price { get; set; }
 
-    public string Status { get; set; } = null!;
+    public string status { get; set; } = null!;
 
-    public DateTime Created { get; set; }
+    public DateTime created { get; set; } = DateTime.UtcNow;
 
-    public virtual ICollection<order_item> OrderItems { get; set; } = new List<order_item>();
+    public virtual ICollection<order_item> order_items { get; set; } = new List<order_item>();
 
-    public virtual ICollection<payment> Payments { get; set; } = new List<payment>();
+    public virtual ICollection<payment> payments { get; set; } = new List<payment>();
 
-    public virtual user User { get; set; } = null!;
+    public virtual user user { get; set; } = null!;
 }

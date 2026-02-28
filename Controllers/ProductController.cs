@@ -29,18 +29,19 @@ namespace Crypto_Store.Controllers
             decimal? minPrice = null,
             string? search = null)
         {
-            var query = _db.Products.AsQueryable();
+            var query = _db.products.AsQueryable();
 
             if (minPrice.HasValue)
-                query = query.Where(p => p.Price >= minPrice);
+                query = query.Where(p => p.price >= minPrice);
 
             if (!string.IsNullOrWhiteSpace(search))
-                query = query.Where(p => p.Title.Contains(search));
+                query = query.Where(p => p.title.Contains(search));
 
 
             var totalCount = await query.CountAsync();
 
             var items = await query
+                .OrderBy(p => p.created)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
@@ -57,13 +58,13 @@ namespace Crypto_Store.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> ProductGetId(Guid id)
         {
-            var product = await _db.Products.Where(p => p.Id == id)
+            var product = await _db.products.Where(p => p.id == id)
                 .Select(p => new ProductDto
                 {
-                    Title = p.Title,
-                    Description = p.Description,
-                    Price = p.Price,
-                    ImageURL = p.ImageUrl
+                    Title = p.title,
+                    Description = p.description,
+                    Price = p.price,
+                    ImageURL = p.image_url
                 }).FirstOrDefaultAsync();
 
             return Ok(product);
@@ -76,20 +77,20 @@ namespace Crypto_Store.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            bool title = await _db.Products.AnyAsync(p => p.Title == dto.Title);
+            bool title = await _db.products.AnyAsync(p => p.title == dto.Title);
 
             if (title)
                 return Conflict("A product with this name already exists.");
 
             var product = new product
             {
-                Title = dto.Title,
-                Description = dto.Description,
-                Price = dto.Price,
-                ImageUrl = dto.ImageURL
+                title = dto.Title,
+                description = dto.Description,
+                price = dto.Price,
+                image_url = dto.ImageURL
             };
 
-            _db.Products.Add(product);
+            _db.products.Add(product);
             await _db.SaveChangesAsync();
 
             return Ok(product);
@@ -100,11 +101,11 @@ namespace Crypto_Store.Controllers
         [HttpPatch("{id}/title")]
         public async Task<IActionResult> UpdateTitle(Guid id, [FromBody] string title)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _db.products.FirstOrDefaultAsync(p => p.id == id);
             if (product == null)
                 return NotFound("Product is not found");
 
-            product.Title = title;
+            product.title = title;
             await _db.SaveChangesAsync();
 
             return NoContent();
@@ -114,11 +115,11 @@ namespace Crypto_Store.Controllers
         [HttpPatch("{id}/descripton")]
         public async Task<IActionResult> UpdateDescrition(Guid id, [FromBody] string description)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _db.products.FirstOrDefaultAsync(p => p.id == id);
             if (product == null)
                 return NotFound("Product is not found");
 
-            product.Description = description;
+            product.description = description;
             await _db.SaveChangesAsync();
 
             return NoContent();
@@ -128,11 +129,11 @@ namespace Crypto_Store.Controllers
         [HttpPatch("{id}/price")]
         public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] decimal price)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
+            var product = await _db.products.FirstOrDefaultAsync(p=> p.id == id);
             if(product == null)
                 return NotFound("Product is not found");
 
-            product.Price = price;
+            product.price = price;
             await _db.SaveChangesAsync();
 
             return NoContent();
@@ -143,11 +144,11 @@ namespace Crypto_Store.Controllers
         [HttpPatch("{id}/image")]
         public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] string imageUrl)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _db.products.FirstOrDefaultAsync(p => p.id == id);
             if (product == null)
                 return NotFound("Product is not found");
 
-            product.ImageUrl = imageUrl;
+            product.image_url = imageUrl;
             await _db.SaveChangesAsync();
 
             return NoContent();
@@ -158,11 +159,11 @@ namespace Crypto_Store.Controllers
         [HttpDelete("{id}/delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
+            var product = await _db.products.FirstOrDefaultAsync(p=> p.id == id);
             if(product == null)
                 return NotFound("Product is not found");
 
-            _db.Products.Remove(product);
+            _db.products.Remove(product);
             await _db.SaveChangesAsync();
 
             return NoContent();

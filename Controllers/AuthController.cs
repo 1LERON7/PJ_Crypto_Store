@@ -38,7 +38,7 @@ namespace Crypto_Store.Controllers
         public async Task<IActionResult> Register(RegisterUserDto dto)
         {
             // проверка на пользователя в бд
-            var exists = await _db.Users.AnyAsync(u => u.Email == dto.Email);
+            var exists = await _db.users.AnyAsync(u => u.email == dto.Email);
             if (exists)
                 return BadRequest("User already exists");
 
@@ -46,19 +46,20 @@ namespace Crypto_Store.Controllers
 
             var user = new user
             {
-                Email = dto.Email,
-                PasswordHash = passwordHash,    // ХЭЭШ!!!  закодированный пароль + Соль.
-                Role = "user"
+                email = dto.Email,
+                password_hash = passwordHash,    // ХЭЭШ!!!  закодированный пароль + Соль.
+                role = "user",
+                created = DateTime.UtcNow
             };
 
-            _db.Users.Add(user);
+            _db.users.Add(user);
             await _db.SaveChangesAsync();
 
             return Ok(new ResponseUserDto
             {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
+                Id = user.id,
+                Email = user.email,
+                Role = user.role
             });
 
         }
@@ -66,12 +67,12 @@ namespace Crypto_Store.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(RegisterUserDto dto)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            var user = await _db.users.FirstOrDefaultAsync(u => u.email == dto.Email);
             if (user == null)
                 return Unauthorized("Invalid email or password");
 
             // проверка пароля из запроса и захэшированого из БД.
-            var isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash);
+            var isPasswordValid = BCrypt.Net.BCrypt.Verify(dto.Password, user.password_hash);
 
             if (!isPasswordValid)
                 return Unauthorized("Invalid email or password");
@@ -79,9 +80,9 @@ namespace Crypto_Store.Controllers
 
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.Role, user.role),
+                new Claim(ClaimTypes.Email, user.email)
             };
 
             var key = new SymmetricSecurityKey(
@@ -99,8 +100,8 @@ namespace Crypto_Store.Controllers
             // Создаем рефреш (длительный) токен
             var refreshToken = GenerateRefreshToken();
 
-            user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiry = DateTime.UtcNow.AddDays(7);
+            user.refresh_token = refreshToken;
+            user.refresh_token_time = DateTime.UtcNow.AddDays(7);
 
             await _db.SaveChangesAsync();
 
@@ -114,18 +115,18 @@ namespace Crypto_Store.Controllers
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] RefreshDto dto)
         {
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.RefreshToken == dto.RefreshToken);
+            var user = await _db.users.FirstOrDefaultAsync(u => u.refresh_token == dto.RefreshToken);
 
-            if (user == null || user.RefreshTokenExpiry < DateTime.UtcNow)
+            if (user == null || user.refresh_token_time < DateTime.UtcNow)
                 return Unauthorized();
 
             
             // тут новый аксесс токен
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.NameIdentifier, user.id.ToString()),
+                new Claim(ClaimTypes.Role, user.role),
+                new Claim(ClaimTypes.Email, user.email)
             };
 
             var key = new SymmetricSecurityKey(
@@ -155,11 +156,11 @@ namespace Crypto_Store.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var user = await _db.Users.FindAsync(Guid.Parse(userId));
+            var user = await _db.users.FindAsync(Guid.Parse(userId));
             if (user == null)
                 return Unauthorized();
-            user.RefreshToken = null;
-            user.RefreshTokenExpiry = null;
+            user.refresh_token = null;
+            user.refresh_token_time = null;
 
             await _db.SaveChangesAsync();
 
