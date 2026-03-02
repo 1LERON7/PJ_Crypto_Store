@@ -30,15 +30,23 @@ export default function ProductDetails() {
     <div className="container mt-5" style={{ maxWidth: "1000px" }}>
       <h2>{product.title}</h2>
 
+    
       <img
         src={product.imageURL}
         alt={product.title}
         className="img-fluid rounded mb-4"
+        
       />
 
+    
       <p>{product.description}</p>
-      <h4 className="text-success">${product.price}</h4>
+      <div className="d-flex justify-content-between align-items-center">
+      <h4 className="text-success fw-bold">${product.price}</h4>
+
+      <button type="button" class="btn btn-success">Buy</button>
     </div>
+    </div>
+    
     <Footer/>
     </>
   );

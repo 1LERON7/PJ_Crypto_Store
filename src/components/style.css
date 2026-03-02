@@ -5,3 +5,33 @@
 .bg-color {
     background: #212529;
 }
+
+.fav-btn i {
+  color: #dc3545;
+  font-size: 18px;
+  transition: color 0.2s ease;
+}
+
+.fav-btn:hover {
+  background-color: #dc3545;
+  transform: scale(1.05);
+}
+
+.fav-btn:hover i {
+  color: white;
+}
+
+.fav-btn {
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  background: white;
+  border: none;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}

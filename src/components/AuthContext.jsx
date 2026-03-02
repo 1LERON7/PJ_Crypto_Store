@@ -7,18 +7,18 @@ export function AuthProvider({ children }) {
 
   // при старте приложения читаем токен
   useEffect(() => {
-    setAuth(!!localStorage.getItem("accessToken"));
+    setAuth(!!localStorage.getItem("AccessToken"));
   }, []);
 
   const loginSuccess = (accessToken, refreshToken) => {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("AccessToken", accessToken);
+    localStorage.setItem("RefreshToken", refreshToken);
     setAuth(true);
   };
 
   const logout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+    localStorage.removeItem("AccessToken");
+    localStorage.removeItem("RefreshToken");
     setAuth(false);
   };
 
