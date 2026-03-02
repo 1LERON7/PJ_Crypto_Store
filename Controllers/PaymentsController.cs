@@ -27,34 +27,36 @@ namespace Crypto_Store.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var order = await _db.orders.FirstOrDefaultAsync(o => o.id == dto.OrderId && o.user_id == Guid.Parse(userId));
+            var order = await _db.Orders.FirstOrDefaultAsync(o => o.Id == dto.OrderId && o.UserId == Guid.Parse(userId));
 
             if (order == null)
                 return NotFound();
 
-            if (order.status == "paid")
+            if (order.Status == "paid")
                 return BadRequest("Order already paid!");
 
-            var payment = new payment()
+            var payment = new Payment()
             {
-                order_id = order.id,
-                amount = order.total_price,
-                // PaymentMethod = "test",      ADD TO DB
-                status = "confirmed",
-                created = DateTime.Now
+                OrderId = order.Id,
+                Amount = order.TotalPrice,
+                Currency = "ETH",
+                Network = "Sepolia", // или Mainnet
+                Status = "created", 
+                Confirmations = 0,
+                Created = DateTime.UtcNow
             };
 
             _db.Add(payment);
 
-            order.status = "paid";
+            order.Status = "paid";
 
             await _db.SaveChangesAsync();
 
             return Ok(new
             {
                 message = "Payment seccess",
-                paymentId = payment.id,
-                orderId = order.id
+                paymentId = payment.Id,
+                orderId = order.Id
             });
         }
     }

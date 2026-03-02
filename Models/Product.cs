@@ -1,23 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crypto_Store.Models;
 
-public partial class product
+[Table("products")]
+public partial class Product
 {
-    public Guid id { get; set; }
+    [Key]
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string title { get; set; } = null!;
+    [Column("title")]
+    [StringLength(50)]
+    public string Title { get; set; } = null!;
 
-    public string? description { get; set; }
+    [Column("description")]
+    public string? Description { get; set; }
 
-    public decimal price { get; set; }
+    [Column("price")]
+    [Precision(18, 8)]
+    public decimal Price { get; set; }
 
-    public string image_url { get; set; } = null!;
+    [Column("image_url")]
+    public string ImageUrl { get; set; } = null!;
 
-    public DateTime created { get; set; } = DateTime.UtcNow;
+    [Column("created")]
+    public DateTime Created { get; set; }
 
-    public virtual ICollection<order_item> order_items { get; set; } = new List<order_item>();
+    [InverseProperty("Product")]
+    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
-    public virtual ICollection<user> users { get; set; } = new List<user>();
+    [InverseProperty("Product")]
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 }

@@ -1,21 +1,46 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crypto_Store.Models;
 
-public partial class payment
+[Table("payments")]
+public partial class Payment
 {
-    public Guid id { get; set; }
+    [Key]
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid order_id { get; set; }
+    [Column("order_id")]
+    public Guid OrderId { get; set; }
 
-    public string? tx_hash { get; set; }
+    [Column("tx_hash")]
+    public string? TxHash { get; set; }
 
-    public string status { get; set; } = null!;
+    [Column("currency")]
+    public string Currency { get; set; } = null!;
 
-    public DateTime created { get; set; } = DateTime.UtcNow;
+    [Column("network")]
+    public string? Network { get; set; }
 
-    public decimal amount { get; set; }
+    [Column("confirmations")]
+    public int? Confirmations { get; set; }
 
-    public virtual order order { get; set; } = null!;
+    [Column("confirmed_at", TypeName = "timestamp without time zone")]
+    public DateTime? ConfirmedAt { get; set; }
+
+    [Column("status")]
+    public string Status { get; set; } = null!;
+
+    [Column("created", TypeName = "timestamp without time zone")]
+    public DateTime Created { get; set; }
+
+    [Column("amount")]
+    public decimal Amount { get; set; }
+
+    [ForeignKey("OrderId")]
+    [InverseProperty("Payments")]
+    public virtual Order Order { get; set; } = null!;
 }

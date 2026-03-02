@@ -1,25 +1,40 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crypto_Store.Models;
 
-public partial class user
+[Table("users")]
+[Index("Email", Name = "users_email_key", IsUnique = true)]
+public partial class User
 {
-    public Guid id { get; set; }
+    [Key]
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public string email { get; set; } = null!;
+    [Column("email")]
+    public string Email { get; set; } = null!;
 
-    public string role { get; set; } = null!;
+    [Column("role")]
+    public string Role { get; set; } = null!;
 
-    public string password_hash { get; set; } = null!;
+    [Column("password_hash")]
+    public string PasswordHash { get; set; } = null!;
 
-    public DateTime created { get; set; } = DateTime.UtcNow;
+    [Column("created")]
+    public DateTime Created { get; set; }
 
-    public string? refresh_token { get; set; }
+    [Column("refresh_token")]
+    public string? RefreshToken { get; set; }
 
-    public DateTime? refresh_token_time { get; set; } = DateTime.UtcNow;
+    [Column("refresh_token_time")]
+    public DateTime? RefreshTokenTime { get; set; }
 
-    public virtual ICollection<order> orders { get; set; } = new List<order>();
+    [InverseProperty("User")]
+    public virtual ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 
-    public virtual ICollection<product> products { get; set; } = new List<product>();
+    [InverseProperty("User")]
+    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 }

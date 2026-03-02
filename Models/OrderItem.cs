@@ -31,9 +31,9 @@ public partial class OrderItem
 
     [ForeignKey("OrderId")]
     [InverseProperty("OrderItems")]
-    public virtual order Order { get; set; } = null!;
+    public virtual Order Order { get; set; } = null!;
 
     [ForeignKey("ProductId")]
     [InverseProperty("OrderItems")]
-    public virtual product Product { get; set; } = null!;
+    public virtual Product Product { get; set; } = null!;
 }

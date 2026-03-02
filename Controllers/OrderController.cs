@@ -24,54 +24,54 @@ namespace Crypto_Store.Controllers
         }
 
         [Authorize]
-        [HttpPost("/create")]
+        [HttpPost("create")]
         public async Task<IActionResult> CreateOrder(CreateOrdersDto dto)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if (userId == null)
                 return Unauthorized();
 
-            var products = await _db.products.Where(p=> dto.ProductIds.Contains(p.id)).ToListAsync();
+            var products = await _db.Products.Where(p=> dto.ProductIds.Contains(p.Id)).ToListAsync();
             if (products.Count != dto.ProductIds.Count)
                 return BadRequest("One or more products not found");
 
-            var totalPrice = products.Sum(p=> p.price);
+            var totalPrice = products.Sum(p=> p.Price);
 
-            var order = new order
+            var order = new Order
             {
-                user_id = Guid.Parse(userId),
-                total_price = totalPrice,
-                status = "created"
+                UserId = Guid.Parse(userId),
+                TotalPrice = totalPrice,
+                Status = "created"
 
             };
 
-            _db.orders.Add(order);
+            _db.Orders.Add(order);
             await _db.SaveChangesAsync();
 
-            var orderItems = products.Select(p => new order_item
+            var orderItems = products.Select(p => new OrderItem
             {
-                order_id = order.id,
-                product_id = p.id,
-                price = totalPrice,
-                quantity = products.Count()
+                OrderId = order.Id,
+                ProductId = p.Id,
+                Price = totalPrice,
+                Quantity = products.Count()
             });
 
             // AddRange(); -- добавления массива значений в БД
-            _db.order_items.AddRange(orderItems);
+            _db.OrderItems.AddRange(orderItems);
             await _db.SaveChangesAsync();
 
             return Ok(order);
         }
 
         [Authorize]
-        [HttpGet("/my")]
+        [HttpGet("my")]
         public async Task<IActionResult> GetMyOrders(Guid id)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             if(userId == null) 
                 return Unauthorized();
 
-            var orders = await _db.orders.Where(o => o.user_id == Guid.Parse(userId)).ToListAsync();
+            var orders = await _db.Orders.Where(o => o.UserId == Guid.Parse(userId)).ToListAsync();
 
             
             return Ok(orders);
@@ -85,7 +85,7 @@ namespace Crypto_Store.Controllers
             if (userId == null)
                 return Unauthorized();
 
-            var order = await _db.orders.FirstOrDefaultAsync(o=> o.id == id && o.user_id == Guid.Parse(userId));
+            var order = await _db.Orders.FirstOrDefaultAsync(o=> o.Id == id && o.UserId == Guid.Parse(userId));
 
             if(order == null) 
                 return NotFound();

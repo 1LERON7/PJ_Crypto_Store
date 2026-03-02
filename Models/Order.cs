@@ -1,23 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.EntityFrameworkCore;
 
 namespace Crypto_Store.Models;
 
-public partial class order
+[Table("orders")]
+[Index("UserId", Name = "idx_orders_user_id")]
+public partial class Order
 {
-    public Guid id { get; set; }
+    [Key]
+    [Column("id")]
+    public Guid Id { get; set; }
 
-    public Guid user_id { get; set; }
+    [Column("user_id")]
+    public Guid UserId { get; set; }
 
-    public decimal total_price { get; set; }
+    [Column("total_price")]
+    [Precision(18, 8)]
+    public decimal TotalPrice { get; set; }
 
-    public string status { get; set; } = null!;
+    [Column("status")]
+    public string Status { get; set; } = null!;
 
-    public DateTime created { get; set; } = DateTime.UtcNow;
+    [Column("created")]
+    public DateTime Created { get; set; }
 
-    public virtual ICollection<order_item> order_items { get; set; } = new List<order_item>();
+    [InverseProperty("Order")]
+    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
 
-    public virtual ICollection<payment> payments { get; set; } = new List<payment>();
+    [InverseProperty("Order")]
+    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
 
-    public virtual user user { get; set; } = null!;
+    [ForeignKey("UserId")]
+    [InverseProperty("Orders")]
+    public virtual User User { get; set; } = null!;
 }
