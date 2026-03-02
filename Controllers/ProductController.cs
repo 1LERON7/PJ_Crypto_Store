@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Crypto_Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/products")]
     [ApiController]
     public class ProductController : ControllerBase
     {
@@ -25,7 +25,7 @@ namespace Crypto_Store.Controllers
         [HttpGet]
         public async Task<IActionResult> GetProducts(
             int page = 1,
-            int pageSize = 10,
+            int pageSize = 12,
             decimal? minPrice = null,
             string? search = null)
         {

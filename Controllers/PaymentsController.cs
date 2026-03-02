@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace Crypto_Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/payments")]
     [ApiController]
     public class PaymentsController : ControllerBase
     {

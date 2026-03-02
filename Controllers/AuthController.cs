@@ -13,7 +13,7 @@ using System.Text;
 namespace Crypto_Store.Controllers
 {
 
-    [Route("api/[controller]")]
+    [Route("api/auth")]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -105,10 +105,10 @@ namespace Crypto_Store.Controllers
 
             await _db.SaveChangesAsync();
 
-            return Ok(new
+            return Ok(new LoginResponseDto
             {
-                accessToken = new JwtSecurityTokenHandler().WriteToken(token),
-                refreshtoken = refreshToken
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                RefreshToken = refreshToken
             });
         }
 

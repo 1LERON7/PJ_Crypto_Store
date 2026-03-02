@@ -35,7 +35,23 @@ builder.Services.AddAuthentication("Bearer")
 
 builder.Services.AddAuthorization();
 
+// CORS policy 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+    });
+});
+
+
 var app = builder.Build();
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -44,13 +60,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+app.UseHttpsRedirection();
+// CORS policy 
+app.UseCors("AllowFrontend");
+
 // JWT 
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+//app.UseAuthorization();
 
 app.MapControllers();
 

@@ -12,7 +12,7 @@ using System.Text;
 
 namespace Crypto_Store.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -38,11 +38,11 @@ namespace Crypto_Store.Controllers
             if (user == null)
                 return NotFound();
 
-            return Ok(new 
+            return Ok(new
             {
-                user.id,
-                user.email,
-                user.role
+                email = user.email,
+                role = user.role,
+                createdAt = user.created
             });
         }
 
