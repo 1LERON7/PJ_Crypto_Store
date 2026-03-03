@@ -2,6 +2,7 @@
 {
     public class PaymentsDto
     {
-        public Guid OrderId { get; set; }
+        public int PaymentId { get; set; }
+        public string TxHash { get; set; }
     }
 }
