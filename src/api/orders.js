@@ -9,5 +9,5 @@ export const createOrder = async ({ productId }) => {
     { headers: { Authorization: `Bearer ${token}` } }
   );
 
-  return data; // orderId, total, status
+  return data; 
 };

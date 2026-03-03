@@ -34,7 +34,7 @@ export default function ProductCard({ product, onClick  }) {
 
   <div className="card-body d-flex justify-content-between align-items-center">
     <span className="fw-semibold">{product.title}</span>
-    <span className="fw-bold text-success">${product.price}</span>
+    <span className="fw-bold text-success">ETH {product.price}</span>
   </div>
 </div>
   );
