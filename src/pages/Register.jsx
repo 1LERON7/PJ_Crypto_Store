@@ -15,6 +15,37 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    const emailParts = email.split("@");
+
+if (emailParts[0].length < 3) {
+  setError("Email must have at least 3 characters before @");
+  return;
+}
+
+    if(!email.trim()){
+      setError("Email is required");
+      return;
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+    setError("Invalid email format");
+    return;
+  }
+
+  if (password.length < 6) {
+    setError("Password must be at least 6 characters");
+    return;
+  }
+  
+  if(email.length > 100){
+    setError("Email is so long");
+  }
+
+  if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+    setError("Password must contain letters and numbers");
+    return;
+  }
+
     try {
       // ждем ответ от БД что мы зарегались
       await register({ email, password });

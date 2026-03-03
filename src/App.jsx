@@ -5,6 +5,9 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./components/Profile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import AdminLayout from "./pages/Admin/AdminLayout";
+import AdminProducts from "./pages/Admin/AdminProducts";
+
 
 export default function App() {
   return (
@@ -14,6 +17,12 @@ export default function App() {
       <Route path="/auth/register" element={<Register />} />
       <Route path="/products/:id" element={<ProductItem/>}/>
       <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+
+      <Route path="/admin" element={<AdminLayout />}/>
+      {/* <Route index element={<AdminDashboard />} /> */}
+      <Route path="/admin/products" element={<AdminProducts />} />
+      {/* <Route path="users" element={<AdminUsers />} /> */}
+
     </Routes>
   );
 }
