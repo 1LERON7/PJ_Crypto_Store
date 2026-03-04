@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { register, login } from "../api/auth";
 import HeaderAuth from "../components/HeaderAuth";
-
+import "../components/style.css";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -67,46 +67,56 @@ if (emailParts[0].length < 3) {
 
   return (
     <>
-    <HeaderAuth/>
-    <div className="container d-flex justify-content-center align-items-center vh-100">
-      <div className="col-12 col-md-6 col-lg-4">
-        <form onSubmit={handleSubmit} className="p-4 shadow rounded bg-white">
-          <h3 className="text-center mb-4">Register</h3>
+  <HeaderAuth />
 
-          {error && <div className="alert alert-danger">{error}</div>}
+  <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="col-12 col-md-6 col-lg-4">
 
-          {/* <input
-            className="form-control mb-3"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          /> */}
+      <form
+        onSubmit={handleSubmit}
+        className="card shadow-lg p-4 border-0"
+      >
+        <h3 className="text-center mb-4">Register</h3>
 
-          <input
-            className="form-control mb-3"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
 
-          <input
-            type="password"
-            className="form-control mb-3"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        <input
+          className="form-control mb-3"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
-          <button className="btn btn-primary w-100">
-            Register
-          </button>
+        <input
+          type="password"
+          className="form-control mb-3"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
 
-          <p className="text-center mt-3">
-            Already have an account? <a href="/auth/login">Login</a>
-          </p>
-        </form>
-      </div>
+        <button className="btn btn-primary w-100 mb-3">
+          Register
+        </button>
+
+        <p className="text-center mb-0">
+          Already have an account?{" "}
+          
+          <Link to="/auth/login">
+          Login
+          </Link>
+            
+          
+        </p>
+
+      </form>
+
     </div>
-    </>
+  </div>
+</>
   );
 }

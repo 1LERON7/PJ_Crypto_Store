@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
 import HeaderAuth from "../components/HeaderAuth";
 import { useAuth } from "../components/AuthContext";
@@ -68,39 +68,56 @@ export default function Login() {
 
   return (
     <>
-      <HeaderAuth />
+  <HeaderAuth />
 
-      <div className="container d-flex justify-content-center align-items-center vh-100">
-        <div className="col-12 col-md-6 col-lg-4">
-          <form onSubmit={handleSubmit} className="p-4 shadow rounded bg-white">
-            <h3 className="text-center mb-4">Login</h3>
+  <div className="container d-flex justify-content-center align-items-center vh-100">
+    <div className="col-12 col-md-6 col-lg-4">
 
-            {error && <div className="alert alert-danger">{error}</div>}
+      <form
+        onSubmit={handleSubmit}
+        className="card shadow-lg p-4 border-0"
+      >
+        <h3 className="text-center mb-4">Login</h3>
 
-            <input
-              type="email"
-              className="form-control mb-3"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+        {error && (
+          <div className="alert alert-danger">
+            {error}
+          </div>
+        )}
 
-            <input
-              type="password"
-              className="form-control mb-3"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+        <input
+          type="email"
+          className="form-control mb-3"
+          placeholder="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
 
-            <button className="btn btn-primary w-100">
-              Login
-            </button>
-          </form>
-        </div>
-      </div>
-    </>
+        <input
+          type="password"
+          className="form-control mb-3"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button className="btn btn-primary w-100 mb-3">
+          Login
+        </button>
+
+        <p className="text-center mb-0">
+          Don’t have an account?{" "}
+          <Link to="/auth/register">
+          Register
+          </Link>
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+</>
   );
 }

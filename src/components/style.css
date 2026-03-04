@@ -2,8 +2,19 @@
     color:aliceblue
 }
 
+
+.auth-card {
+  background: var(--bs-body-bg);
+  border: none;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+
 .bg-color {
     background: #1a1a1a;
+}
+.theme-toggle .btn {
+  min-width: 90px;
 }
 
 .fav-btn i {
@@ -34,4 +45,7 @@
   justify-content: center;
 
   transition: background-color 0.2s ease, transform 0.15s ease;
+}
+.navbar {
+  background: #111;
 }

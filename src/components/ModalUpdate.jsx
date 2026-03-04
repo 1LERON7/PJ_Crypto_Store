@@ -4,9 +4,14 @@ const ModalUpdate = ({ product, onSave }) => {
     const [form, setForm] = useState(product || {});
 
     const handleUpdate = (e) => {
+      const {name, value} = e.target;
+
+      console.log(form);
+      console.log(typeof form.price);
+
         setForm({
             ...form,
-            [e.target.name]: e.target.value
+            [name]: value
         })
     }
 
@@ -16,10 +21,16 @@ const ModalUpdate = ({ product, onSave }) => {
   }
 }, [product]);
 
+
     const handleSave = () => {
         console.log(form);
-        onSave(form);
+        onSave({
+          ...form,
+          price: Number(form.price)
+        });
     };
+
+    
     return (
        <div className="modal fade" id="updateProductModal">
       <div className="modal-dialog">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import "../components/style.css";
 
 export default function ThemeToggle() {
   const [theme, setTheme] = useState("dark");
@@ -8,20 +9,20 @@ export default function ThemeToggle() {
   }, [theme]);
 
   return (
-    <div className="btn-group">
-      <button
-        className={`btn ${theme === "dark" ? "btn-dark" : "btn-outline-dark"}`}
-        onClick={() => setTheme("dark")}
-      >
-        🌙 Dark
-      </button>
+    <div className="btn-group theme-toggle">
+  <button
+    className={`btn ${theme === "dark" ? "btn-dark" : "btn-outline-secondary"}`}
+    onClick={() => setTheme("dark")}
+  >
+    🌙 Dark
+  </button>
 
-      <button
-        className={`btn ${theme === "light" ? "btn-light" : "btn-outline-light"}`}
-        onClick={() => setTheme("light")}
-      >
-        ☀ Light
-      </button>
-    </div>
+  <button
+    className={`btn ${theme === "light" ? "btn-light" : "btn-outline-secondary"}`}
+    onClick={() => setTheme("light")}
+  >
+    ☀ Light
+  </button>
+</div>
   );
 }

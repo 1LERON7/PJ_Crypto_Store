@@ -15,7 +15,7 @@ export default function Header() {
   // }, []);
 
   return (
-    <nav className="navbar navbar-light bg-color px-4">
+    <nav className="navbar d-flex align-items-center px-4">
       
       <div className="d-flex align-items-center">
         <img
@@ -26,23 +26,20 @@ export default function Header() {
       </div>
 
       <div className="txt">
-        <h3>STREAM STORE</h3>
-      </div>
+    <h3 className="mb-0">STREAM STORE</h3>
+  </div>
 
-          
+  <div className="ms-auto d-flex align-items-center gap-3">
 
- {/* тернарный оператор, на визуализацию UI */}
-    <div>
+    <ThemeToggle />
+
     {auth ? (
-      
-      
-       <div className="d-flex gap-2">
-       
-            <ThemeToggle />
-
-          <Link to="/profile" className="btn btn-outline-light">Profile</Link>
-
-          <button
+      <div className="d-flex gap-2">
+        <Link to="/profile" className="btn btn-outline-light">
+          Profile
+        </Link>
+        
+         <button
             className="btn btn-outline-danger"
             onClick={() => {
               logout();
@@ -51,25 +48,23 @@ export default function Header() {
           >
             Logout
           </button>
-        </div>
 
-    ) : (
-      <div className="d-flex gap-2">
-
-        <Link to="/auth/login" className="btn btn-outline-primary">
-          Login
-        </Link>
-
-        <Link to="/auth/register" className="btn btn-primary">
-          Register
-        </Link>
-          
       </div>
+    ) : (
+     <div className="d-flex gap-2">
+      <Link to="auth/login" className="btn btn-outline-primary">
+        Login
+      </Link>
+
+      <Link to="auth/register" className="btn btn-primary ">
+        Register
+      </Link>
+    </div>
     )}
+
+  </div>
     
       
-
-      </div>
     </nav>
   );
 }

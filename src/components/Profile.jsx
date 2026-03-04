@@ -5,12 +5,12 @@ import BackHeader from "../components/HeaderBack";
 import { useFavorites } from "./FavoritesContext";
 import ProductCard from "./ProductsCard";
 import axios from "../api/axios";
-import Footer from "./Footer";
 
-console.log("TOKEN:", localStorage.getItem("AccessToken"));
+// console.log("TOKEN:", localStorage.getItem("AccessToken"));
 
 // пропс продуктов
 export default function Profile() {
+
   const { favoriteIds } = useFavorites();
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
@@ -73,12 +73,21 @@ export default function Profile() {
           <div className="fs-5">{email}</div>
         </div>
 
-        <div className="mb-3">
-          <small className="text-muted">Role</small>
-          <div>
-            <span className="badge bg-primary">{role}</span>
-          </div>
-        </div>
+
+{/* ТОЛЬКО ДЛЯ АДМИНА ВИДНА РОЛЬ И КНОПКА */}
+    {role === "admin" && (
+  <div className="mb-3">
+    <small className="text-muted">Role</small>
+
+    <div className="mb-2">
+      <span className="badge bg-danger">{role}</span>
+    </div>
+
+    <Link to="/admin" className="btn btn-danger btn-sm">
+      Admin Panel
+    </Link>
+  </div>
+)}
 
         <div className="mb-4">
           <small className="text-muted">Account created</small>

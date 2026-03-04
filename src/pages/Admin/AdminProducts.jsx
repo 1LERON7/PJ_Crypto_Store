@@ -3,9 +3,10 @@ import api from "../../api/api";
 import "./admin.css";
 import CreateProductModal from "../../components/ModalProduct";
 import UpdateProductModal from "../../components/ModalUpdate";
+import { deleteProduct } from "../../api/products";
+
 
 export default function AdminProducts() {
-  // const [form, setForm] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
 
 
@@ -29,31 +30,27 @@ export default function AdminProducts() {
 
 
   const handleUpdate = async (product) => {
-  await Promise.all([
-    api.patch(`/products/${product.id}/title`,
-      JSON.stringify(product.title),
-      { headers: { "Content-Type": "application/json" } }
-    ),
+  
+  const dto = {
+    title: product.title,
+    price: Number(product.price),
+    description: product.description,
+    imageUrl: product.imageUrl
+  };
 
-    api.patch(`/products/${product.id}/price`,
-      JSON.stringify(product.price),
-      { headers: { "Content-Type": "application/json" } }
-    ),
-
-    api.patch(`/products/${product.id}/description`,
-      JSON.stringify(product.description),
-      { headers: { "Content-Type": "application/json" } }
-    ),
-
-    api.patch(`/products/${product.id}/image`,
-      JSON.stringify(product.imageUrl),
-      { headers: { "Content-Type": "application/json" } }
-    ),
-  ]);
-
+  await api.put(`/products/${product.id}`, dto);
+  
   loadProducts();
 };
 
+  const handleDelete = async (id) => {
+    await deleteProduct(id);
+
+    setProducts(prev => 
+      prev.filter(p => p.id !== id)
+    );
+    setTotalCount(prev => prev - 1);
+  }
 
   const totalPages = Math.ceil(totalCount / pageSize);
 
@@ -119,7 +116,10 @@ export default function AdminProducts() {
                 >Edit</button>
 
 
-                <button className="btn btn-sm btn-outline-danger">Delete</button>
+                <button 
+                className="btn btn-sm btn-outline-danger"
+                onClick={() => handleDelete(p.id)}
+                >Delete</button>
               </div>
 
             </td>

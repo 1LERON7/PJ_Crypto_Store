@@ -12,3 +12,16 @@
   text-overflow: ellipsis;
 }
 
+
+.admin-sidebar .btn {
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar .btn:hover {
+  transform: translateX(4px);
+}
+
+.admin-sidebar .btn:hover {
+  background: #198754;
+  border-color: #198754;
+}
