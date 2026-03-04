@@ -3,6 +3,7 @@ import "./style.css";
 import { Link, useNavigate } from "react-router-dom";
 // import { useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const { auth, logout } = useAuth();
@@ -28,13 +29,17 @@ export default function Header() {
         <h3>STREAM STORE</h3>
       </div>
 
+          
 
  {/* тернарный оператор, на визуализацию UI */}
     <div>
     {auth ? (
-
-      // <Link to="/profile" className="btn btn-outline-light">Profile</Link>
+      
+      
        <div className="d-flex gap-2">
+       
+            <ThemeToggle />
+
           <Link to="/profile" className="btn btn-outline-light">Profile</Link>
 
           <button
