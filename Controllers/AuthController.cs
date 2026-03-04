@@ -37,7 +37,9 @@ namespace Crypto_Store.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterUserDto dto)
         {
-            // проверка на пользователя в бд
+            if (!ModelState.IsValid) 
+                return BadRequest(ModelState);
+
             var exists = await _db.Users.AnyAsync(u => u.Email == dto.Email);
             if (exists)
                 return BadRequest("User already exists");

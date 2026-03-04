@@ -14,7 +14,10 @@ public partial class User
     [Column("id")]
     public Guid Id { get; set; }
 
+    
+    [Required]
     [Column("email")]
+    [EmailAddress]
     public string Email { get; set; } = null!;
 
     [Column("role")]

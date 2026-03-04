@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Org.BouncyCastle.Crypto;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
@@ -52,6 +53,7 @@ namespace Crypto_Store.Controllers
                 page,
                 pageSize,
                 items
+
             });
         }
 
@@ -70,9 +72,9 @@ namespace Crypto_Store.Controllers
             return Ok(product);
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPost("create")]
-        public async Task<IActionResult> ProductCreate(ProductDto dto)
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> ProductCreate([FromBody] ProductDto dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -97,66 +99,29 @@ namespace Crypto_Store.Controllers
         }
 
 
-        [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}/title")]
-        public async Task<IActionResult> UpdateTitle(Guid id, [FromBody] string title)
+        [Authorize(Roles = "admin")]
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdatePrice(Guid id, ProductDto dto)
         {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
+            var product = await _db.Products.FindAsync(id);
             if (product == null)
                 return NotFound("Product is not found");
 
-            product.Title = title;
+            product.Title = dto.Title;
+            product.Price = dto.Price;
+            product.Description = dto.Description;
+            product.ImageUrl = dto.ImageURL;
+
+
             await _db.SaveChangesAsync();
 
-            return NoContent();
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}/descripton")]
-        public async Task<IActionResult> UpdateDescrition(Guid id, [FromBody] string description)
-        {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null)
-                return NotFound("Product is not found");
-
-            product.Description = description;
-            await _db.SaveChangesAsync();
-
-            return NoContent();
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}/price")]
-        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] decimal price)
-        {
-            var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);
-            if(product == null)
-                return NotFound("Product is not found");
-
-            product.Price = price;
-            await _db.SaveChangesAsync();
-
-            return NoContent();
+            return Ok(product);
 
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpPatch("{id}/image")]
-        public async Task<IActionResult> UpdatePrice(Guid id, [FromBody] string imageUrl)
-        {
-            var product = await _db.Products.FirstOrDefaultAsync(p => p.Id == id);
-            if (product == null)
-                return NotFound("Product is not found");
 
-            product.ImageUrl = imageUrl;
-            await _db.SaveChangesAsync();
-
-            return NoContent();
-
-        }
-
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("{id}/delete")]
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             var product = await _db.Products.FirstOrDefaultAsync(p=> p.Id == id);

@@ -1,8 +1,16 @@
-﻿namespace Crypto_Store.DTOs
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Crypto_Store.DTOs
 {
     public class RegisterUserDto
     {
+        [Required]
+        [EmailAddress]
         public string Email { get; set; }
+
+
+        [Required]
+        [MinLength(6)]
         public string Password { get; set; }
     }
 }
