@@ -40,6 +40,7 @@ export default function Login() {
   
   if(email.length > 100){
     setError("Email is so long");
+    return;
   }
 
   if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {

@@ -8,6 +8,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import AdminLayout from "./pages/Admin/AdminLayout";
 import AdminProducts from "./pages/Admin/AdminProducts";
 import AdminRoute from "./components/AdminRoute";
+import AdminUsers from "./pages/Admin/AdminUsers";
 
 
 export default function App() {
@@ -22,7 +23,7 @@ export default function App() {
       <Route path="/admin" element={<AdminRoute><AdminLayout /></AdminRoute>}>
       <Route index element={<AdminProducts/>}/>
       <Route path="products" element={<AdminProducts />} />
-      {/* <Route path="users" element={<AdminUsers />} /> */}
+      <Route path="users" element={<AdminUsers />} />
     </Route>
     
     </Routes>

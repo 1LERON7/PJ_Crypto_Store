@@ -9,14 +9,23 @@ export function AuthProvider({ children }) {
 
   // при старте приложения читаем токен
   useEffect(() => {
-    // setAuth(!!localStorage.getItem("AccessToken"));
     const token = localStorage.getItem("AccessToken")
 
-    if(token){
-      const decoed = jwtDecode(token);
+    if(!token) return;
+    
+    try {
+    const decoed = jwtDecode(token);
 
       setAuth(true);
       setRole(decoed.role);
+    } catch (err) {
+      console.err("Invalid token", err);          //
+
+      localStorage.removeItem("AccessToken");
+      localStorage.removeItem("RefreshToken");
+
+      setAuth(false);
+      setRole(null);
     }
   }, []);
 
@@ -24,10 +33,15 @@ export function AuthProvider({ children }) {
     localStorage.setItem("AccessToken", accessToken);
     localStorage.setItem("RefreshToken", refreshToken);
 
+
+    try {
     const decoed = jwtDecode(accessToken);
 
     setAuth(true);
     setRole(decoed.role);
+    } catch  {
+        console.error("Invalid login token");       //
+    }
   };
 
   const logout = () => {

@@ -160,7 +160,7 @@ export default function AdminProducts() {
 </nav>
 
 <CreateProductModal onCreated={loadProducts} />
-<UpdateProductModal  product={selectedProduct} onSave={handleUpdate}/>
+<UpdateProductModal product={selectedProduct} onSave={handleUpdate}/>
     </>
     
   );

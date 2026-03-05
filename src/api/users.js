@@ -1,0 +1,21 @@
+import api from "./api";
+
+export const getUsers = async (page, pageSize) => {
+  const { data } = await api.get(`/users?page=${page}&pageSize=${pageSize}`);
+  return data;
+};
+
+export const createUser = async (user) => {
+  const response = await api.post("/users", user);
+  return response.data;
+};
+
+export const deleteUser = async (id) => {
+    const response = await api.delete(`/users/${id}`);
+    return response.data;
+}
+
+export const changeRoleUser = async (id, role) => {
+    const response = await api.patch(`/users/${id}/role`, {role});
+    return response.data;
+}
