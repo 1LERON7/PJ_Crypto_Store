@@ -73,5 +73,115 @@ namespace Crypto_Store.Controllers
 
             return Ok();
         }
+
+        [Authorize(Roles = "admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetUsers(
+            int page = 1,
+            int pageSize = 12,
+            DateTime? createdAfter = null,
+            string? search = null,
+            string? sort = null)
+        {
+            
+            var query = _db.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                search = search.ToLower();
+
+                query = query.Where(u => u.Email.Contains(search));
+            }
+                
+
+            if (sort == "newest")
+            {
+                query = query.OrderByDescending(u => u.Created);
+            }
+            else if (sort == "oldest")
+            {
+                query = query.OrderBy(u => u.Created);
+            }
+            else
+            {
+                query = query.OrderByDescending(u => u.Created);
+            }
+
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderByDescending(u => u.Created)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Ok(new
+            {
+                totalCount,
+                page,
+                pageSize,
+                items
+            });
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPost]
+        public async Task<IActionResult> CreateUser(CreateUserDto dto)
+        {
+            var user = new User
+            {
+                Email = dto.Email,
+                Role = dto.Role,
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                Created = DateTime.UtcNow
+            };
+
+            _db.Users.Add(user);
+            await _db.SaveChangesAsync();
+
+            return Ok(); 
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUserById(Guid id)
+        {
+            var user = await _db.Users.FindAsync(id);
+            if (user == null)
+                return NotFound("User is not found");
+
+            _db.Users.Remove(user);
+            _db.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [Authorize(Roles = "admin")]
+        [HttpPatch("{id}/role")]
+        public async Task<IActionResult> ChangeRoleUser(Guid id, string role)
+        {
+            var allowedRoles = new[] { "admin", "user" };
+
+            if (!allowedRoles.Contains(role))
+                return BadRequest("Invalid role");
+
+            //var user = await _db.Users.FindAsync(id);
+            //if (user == null)
+            //    return NotFound("User is not found");
+
+            //user.Role = role;
+
+            //await _db.SaveChangesAsync();
+
+            var rows = await _db.Users
+                .Where(u => u.Id == id)
+                .ExecuteUpdateAsync(u => u.SetProperty(x => x.Role, role));
+
+            if(rows == 0)
+                return NotFound();
+
+            return NoContent();
+        }
     }
 }
