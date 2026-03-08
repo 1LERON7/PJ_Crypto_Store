@@ -15,6 +15,9 @@ namespace Crypto_Store.DTOs
     {
         // [Required(ErrorMessage = "катомный месседж")]
         // атрибуты валидации. Супер темка для проверки!!!!
+
+        public Guid Id { get; set; }
+
         [Required]
         [StringLength(50, MinimumLength = 5)]
         public string Title { get; set; } = null!;
@@ -27,6 +30,6 @@ namespace Crypto_Store.DTOs
         public decimal Price {  get; set; }
 
         [Url]
-        public string? ImageURL {  get; set; } = string.Empty;
+        public string? ImageUrl {  get; set; } = string.Empty;
     }
 }

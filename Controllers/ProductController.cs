@@ -45,6 +45,14 @@ namespace Crypto_Store.Controllers
                 .OrderBy(p => p.Created)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
+                .Select(p => new ProductDto
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Price = p.Price,
+                    ImageUrl = p.ImageUrl
+                })
                 .ToListAsync();
 
             return Ok(new
@@ -66,7 +74,7 @@ namespace Crypto_Store.Controllers
                     Title = p.Title,
                     Description = p.Description,
                     Price = p.Price,
-                    ImageURL = p.ImageUrl
+                    ImageUrl = p.ImageUrl
                 }).FirstOrDefaultAsync();
 
             return Ok(product);
@@ -89,7 +97,7 @@ namespace Crypto_Store.Controllers
                 Title = dto.Title,
                 Description = dto.Description,
                 Price = dto.Price,
-                ImageUrl = dto.ImageURL
+                ImageUrl = dto.ImageUrl
             };
 
             _db.Products.Add(product);
@@ -110,7 +118,7 @@ namespace Crypto_Store.Controllers
             product.Title = dto.Title;
             product.Price = dto.Price;
             product.Description = dto.Description;
-            product.ImageUrl = dto.ImageURL;
+            product.ImageUrl = dto.ImageUrl;
 
 
             await _db.SaveChangesAsync();
