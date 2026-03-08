@@ -3,10 +3,8 @@ import { useEffect, useState } from "react";
 import { getProductById } from "../api/products";
 import BackHeader from "../components/HeaderBack";
 import Footer from "./Footer";
-import { pay } from "../api/crypto";
-import { createOrder } from "../api/orders";
-import { createPayment } from "../api/payments";
 
+import { buyProduct } from "../web3/contract";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -27,22 +25,14 @@ export default function ProductDetails() {
   }, [id]);
 
 
- const handlePay = async () => {
-  try {
-    // запрос на создание заказ
-    const orderResponse = await createOrder({ productId: id });
-    const orderId = orderResponse.orderId;
+const handleBuy = async () => {
 
-    // запрос на создания payments
-    const {paymentId, amount} = await createPayment(orderId);
+  console.log(product);
 
+  const txHash = await buyProduct(product.id, product.price);
 
-    // запуск маски
-    await pay(paymentId, amount, orderId);
+  console.log("TX:", txHash);
 
-  } catch (err) {
-    console.error(err);
-  }
 };
 
   if (loading) return <div className="container mt-5">Loading...</div>;
@@ -50,28 +40,38 @@ export default function ProductDetails() {
 
   return (
     <>
-    <BackHeader/>
-    <div className="container mt-5" style={{ maxWidth: "1000px" }}>
-      <h2>{product.title}</h2>
+<BackHeader />
 
-    
-      <img
-        src={product.imageURL}
-        alt={product.title}
-        className="img-fluid rounded mb-4"
-        
-      />
+<div className="container mt-5">
 
-    
-      <p>{product.description}</p>
-      <div className="d-flex justify-content-between align-items-center">
-      <h4 className="text-success fw-bold">ETH {product.price}</h4>
+  <h2 className="mb-4">{product.title}</h2>
 
-      <button type="button" className="btn btn-success" onClick={handlePay}>Buy</button>
-    </div>
-    </div>
-    
-    <Footer/>
-    </>
+  <img
+    src={product.imageUrl}
+    alt={product.title}
+    className="w-100"
+    style={{ height: "450px", objectFit: "cover" }}
+  />
+  <p className="text-muted">{product.description}</p>
+
+  <div className="d-flex justify-content-between align-items-center mt-4">
+
+    <h3 className="text-success fw-bold">
+      ETH {product.price}
+    </h3>
+
+    <button
+      className="btn btn-success btn-lg"
+      onClick={handleBuy}
+    >
+      Buy
+    </button>
+
+  </div>
+
+</div>
+
+<Footer />
+</>
   );
 }
