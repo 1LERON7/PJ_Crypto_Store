@@ -40,7 +40,10 @@ namespace Crypto_Store.Controllers
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
-            var exists = await _db.Users.AnyAsync(u => u.Email == dto.Email);
+            var email = dto.Email.ToLower().Trim();
+
+            var exists = await _db.Users.AnyAsync(u => u.Email == email);
+
             if (exists)
                 return BadRequest("User already exists");
 
@@ -48,7 +51,7 @@ namespace Crypto_Store.Controllers
 
             var user = new User
             {
-                Email = dto.Email,
+                Email = email,
                 PasswordHash = passwordHash,    // ХЭЭШ!!!  закодированный пароль + Соль.
                 Role = "user",
                 Created = DateTime.UtcNow

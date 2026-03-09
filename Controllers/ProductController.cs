@@ -71,6 +71,7 @@ namespace Crypto_Store.Controllers
             var product = await _db.Products.Where(p => p.Id == id)
                 .Select(p => new ProductDto
                 {
+                    Id = p.Id,
                     Title = p.Title,
                     Description = p.Description,
                     Price = p.Price,
