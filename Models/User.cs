@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace Crypto_Store.Models;
 
@@ -19,10 +20,12 @@ public partial class User
 
     public DateTime? RefreshTokenTime { get; set; }
 
+    [StringLength(20)]
     public string? Username { get; set; }
 
+    [StringLength(300)]
     public string? Bio { get; set; }
-
+    [StringLength(35)]
     public string? GamerTag { get; set; }
 
     public string? WalletAddress { get; set; }

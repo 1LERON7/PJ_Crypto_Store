@@ -183,5 +183,26 @@ namespace Crypto_Store.Controllers
 
             return NoContent();
         }
+
+
+        [Authorize]
+        [HttpPost("wallet")]
+        public async Task<IActionResult> SaveWallet([FromBody] WalletDto dto)
+        {
+            if (dto == null)
+                return BadRequest("DTO is null");
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null) return BadRequest();
+
+            var user = await _db.Users.FindAsync(Guid.Parse(userId));
+
+            user.WalletAddress = dto.WalletAddress.ToLower(); ;
+
+            await _db.SaveChangesAsync();   
+
+            return Ok();
+        }
     }
 }

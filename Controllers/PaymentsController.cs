@@ -136,7 +136,7 @@ namespace Crypto_Store.Controllers
             });
         }
 
-        [Authorize]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public async Task<IActionResult> GetPayments(
             int page = 1,
@@ -177,5 +177,27 @@ namespace Crypto_Store.Controllers
                 averageAmount
             });
         }
+
+        [Authorize]
+        [HttpGet("check/{productId}")]
+        public async Task<IActionResult> CheckPayment(Guid productId)
+        {
+
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (userId == null)
+                return Unauthorized();
+
+            var payment = await _db.Payments
+                .Where(p => p.ProductId == productId && p.UserId == Guid.Parse(userId))
+                .Select(p => new
+                {
+                    p.Status
+                })
+                .FirstOrDefaultAsync();
+
+            return Ok(payment);
+        }
     }
+
 }

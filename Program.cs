@@ -71,6 +71,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseDeveloperExceptionPage();        // Лог ошибок при статусе 500
 
 app.UseHttpsRedirection();
 // CORS policy 
