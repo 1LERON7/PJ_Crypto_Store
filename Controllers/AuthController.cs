@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -52,19 +53,55 @@ namespace Crypto_Store.Controllers
             var user = new User
             {
                 Email = email,
+                Username = dto.Username,
                 PasswordHash = passwordHash,    // ХЭЭШ!!!  закодированный пароль + Соль.
                 Role = "user",
                 Created = DateTime.UtcNow
             };
 
+            //Console.WriteLine(dto.Username);
+
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
 
-            return Ok(new ResponseUserDto
+            var claims = new[]
             {
-                Id = user.Id,
-                Email = user.Email,
-                Role = user.Role
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Role, user.Role),
+                new Claim(ClaimTypes.Email, user.Email)
+            };
+
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+
+            var token = new JwtSecurityToken(
+                issuer: _config["Jwt:Issuer"],
+                audience: _config["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.UtcNow.AddHours(2),
+                signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
+            );
+
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(token);
+
+            var refreshToken = GenerateRefreshToken();
+
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenTime = DateTime.UtcNow.AddDays(7);
+
+            await _db.SaveChangesAsync();
+
+            //return Ok(new ResponseUserDto
+            //{
+            //    Id = user.Id,
+            //    Email = user.Email,
+            //    Role = user.Role
+            //});
+
+            return Ok(new
+            {
+                accessToken,
+                refreshToken
             });
 
         }

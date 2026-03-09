@@ -12,5 +12,9 @@ namespace Crypto_Store.DTOs
         [Required]
         [MinLength(6)]
         public string Password { get; set; }
+        [Required]
+        [MaxLength(20)]
+        [MinLength(3)]
+        public string Username { get; set; }
     }
 }

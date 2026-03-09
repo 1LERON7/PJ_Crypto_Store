@@ -23,6 +23,39 @@ namespace Crypto_Store.Controllers
             _db = db;
         }
 
+        [Authorize]
+        [HttpPut("profile")]
+        public async Task<IActionResult> UpdateProfile([FromBody] UpdateProfileDto dto)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return BadRequest();
+
+            var user = await _db.Users.FindAsync(Guid.Parse(userId));
+
+            user.Bio = dto.Bio;
+            user.GamerTag = dto.Tag;
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+        [HttpPut("username")]
+        public async Task<IActionResult> UpdateUsername(string name)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null) return BadRequest();
+
+            var user = await _db.Users.FindAsync(Guid.Parse(userId));
+
+            user.Username = name;
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
         [Authorize] // проверка запроса на авторизацию. (валидный JWT токен).
         [HttpGet("profile")]
         public async Task<IActionResult> Profile()
@@ -40,6 +73,10 @@ namespace Crypto_Store.Controllers
 
             return Ok(new
             {
+                avatar = user.AvatarUrl,
+                bio = user.Bio,
+                tag = user.GamerTag,
+                name = user.Username,
                 email = user.Email,
                 role = user.Role,
                 createdAt = user.Created
