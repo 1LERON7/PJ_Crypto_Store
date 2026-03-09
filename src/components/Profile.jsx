@@ -5,6 +5,8 @@ import BackHeader from "../components/HeaderBack";
 import { useFavorites } from "./FavoritesContext";
 import ProductCard from "./ProductsCard";
 import axios from "../api/axios";
+import { connectWallet } from "./MetaMask";
+import {connectAddress } from "../api/users";
 
 // console.log("TOKEN:", localStorage.getItem("AccessToken"));
 
@@ -56,8 +58,22 @@ export default function Profile() {
         .finally(() => setLoading(false));
     }, [navigate]);
 
-    if (loading) {
-    return <div className="container mt-5">Loading...</div>;
+   if (loading)
+  return (
+    <div className="container mt-5 text-center">
+      <div className="spinner-border text-success" role="status"></div>
+      <p className="mt-3 text-muted">Loading profile...</p>
+    </div>
+  );
+
+  const handleConnectWallet = async () => {
+    const address = await connectWallet();
+
+    if(!address) return;
+
+    console.log("Wallet:", address);
+
+    await connectAddress(address);
   }
 
   return (
@@ -98,10 +114,19 @@ export default function Profile() {
             </div>
         </div>
 
-        <div className="d-flex justify-content-end">
+        <div className="d-flex justify-content-between align-items-center">
 
+          <button
+            className="btn btn-warning"
+            onClick={handleConnectWallet}
+          >
+            Connect Wallet
+          </button>
 
-          <button className="btn btn-outline-danger" onClick={handleLogout}>
+          <button
+            className="btn btn-outline-danger"
+            onClick={handleLogout}
+          >
             Logout
           </button>
 

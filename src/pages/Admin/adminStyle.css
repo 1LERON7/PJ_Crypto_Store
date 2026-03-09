@@ -1,0 +1,12 @@
+td, th {
+  vertical-align: middle;
+}
+
+table {
+  table-layout: fixed;
+}
+
+.wallet-link:hover {
+  text-decoration: underline;
+  color: #4ade80;
+}

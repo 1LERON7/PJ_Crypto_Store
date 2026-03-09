@@ -4,16 +4,22 @@ export default function BackHeader({ title = "" }) {
   return (
     <header className="border-bottom bg-dark">
       <div className="container py-3 d-flex align-items-center">
+
         <Link
           to="/"
-          className="btn btn-link p-0 text-decoration-none d-inline-flex align-items-center"
-          aria-label="Back to home"
+          className="d-inline-flex align-items-center text-decoration-none text-light back-link"
         >
-          <span className="me-2" style={{ fontSize: 22, lineHeight: 1 }}>←</span>
+          <span className="me-2 fs-5">←</span>
           <span className="fw-semibold">Back</span>
         </Link>
 
-        {title ? <div className="ms-3 text-muted">{title}</div> : null}
+        {title && (
+          <>
+            <span className="mx-3 text-secondary">/</span>
+            <span className="text-secondary">{title}</span>
+          </>
+        )}
+
       </div>
     </header>
   );

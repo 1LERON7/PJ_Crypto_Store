@@ -1,17 +1,19 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProductById } from "../api/products";
+import { getPaymentStatus } from "../api/payments";
+
 import BackHeader from "../components/HeaderBack";
 import Footer from "./Footer";
 
 import { buyProduct } from "../web3/contract";
-import { confirmPayment } from "../api/payments";
+
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
-
+  const [payment, setPayment] = useState("created");
 
   useEffect(() => {
     getProductById(id)
@@ -19,11 +21,17 @@ export default function ProductDetails() {
         setProduct(data);
         setLoading(false);
       })
+
+    getPaymentStatus(id).then(pay => {
+      setPayment(pay);
+    })
+
       .catch(err => {
         console.error("Ошибка загрузки товара", err);
         setLoading(false);
       });
   }, [id]);
+
 
 
 const handleBuy = async () => {
@@ -32,14 +40,47 @@ const handleBuy = async () => {
 
   const txHash = await buyProduct(product.id, product.price);
 
-  // await confirmPayment(product.id, txHash)
-
   console.log("TX:", txHash);
 
 };
+// console.log(payment);
 
-  if (loading) return <div className="container mt-5">Loading...</div>;
-  if (!product) return <div className="container mt-5">Product not found</div>;
+  if (loading)
+  return (
+    <div className="container mt-5">
+
+      <div className="card p-3">
+
+        <div className="placeholder-glow">
+          <div className="placeholder col-12" style={{height:"300px"}}></div>
+        </div>
+
+        <h4 className="placeholder-glow mt-3">
+          <span className="placeholder col-6"></span>
+        </h4>
+
+        <p className="placeholder-glow">
+          <span className="placeholder col-4"></span>
+        </p>
+
+        <span className="btn btn-success disabled placeholder col-3"></span>
+
+      </div>
+
+    </div>
+  );
+
+  if (!product)
+  return (
+    <div className="container mt-5 text-center" style={{ minHeight: "50vh" }}>
+      <h2 className="text-danger mb-3">Product not found</h2>
+      <p className="text-muted">This item may have been deleted.</p>
+
+      <a href="/" className="btn btn-outline-light mt-3">
+        Back to store
+      </a>
+    </div>
+  );
 
   return (
     <>
@@ -63,12 +104,16 @@ const handleBuy = async () => {
       ETH {product.price}
     </h3>
 
-    <button
-      className="btn btn-success btn-lg"
-      onClick={handleBuy}
-    >
-      Buy
-    </button>
+  {payment?.status === "confirmed" ? (
+  <button className="btn btn-secondary btn-lg">
+    Already purchased
+  </button>
+) : (
+  <button className="btn btn-success btn-lg" onClick={handleBuy}>
+    Buy
+  </button>
+)}
+    
 
   </div>
 

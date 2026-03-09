@@ -2,10 +2,14 @@ import { useEffect, useState } from "react";
 import {deleteUser, getUsers} from "../../api/users";
 import ModalUser from "../../components/ModalUsers";
 import Modal from "react-bootstrap/Modal";
+import "./adminStyle.css";
+import { Toast } from "react-bootstrap";
 
 export default function AdminUsers() {
     const [showDelete, setShowDelete] = useState(false);
     const [selectedUserId, setSelectedUserId] = useState(null);
+
+    const [showToast, setShowToast] = useState(false);
 
   const [users, setUsers] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
@@ -40,6 +44,11 @@ const handleDeleteClick = (id) => {
     loadUsers();
   }, [page]);
 
+  const copyWallet = (address) => {
+  navigator.clipboard.writeText(address);
+  setShowToast(true);
+};
+
   const totalPages = Math.ceil(totalCount / pageSize);
 
   return (
@@ -59,29 +68,54 @@ const handleDeleteClick = (id) => {
           data-bs-toggle="modal"
           data-bs-target="#createUserModal"
         >
-          + Add Product
+          + Add User
         </button>
 
       </div>
 
-     
-   
-
-      <table className="table table-striped table-hover align-middle shadow-sm">
+<div style={{ minHeight: "620px" }}>
+      <table className="table table-dark table-striped table-hover align-middle shadow-sm">
 
         <thead>
           <tr>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Created</th>
-            <th>Actions</th>
+            <th style={{width:"15%"}}>Name</th>
+            <th style={{width:"25%"}}>Email</th>
+            <th style={{width:"30%"}}>Wallet</th>
+            <th style={{width:"10%"}}>Role</th>
+            <th style={{width:"15%"}}>Created</th>
+            <th style={{width:"5%"}}>Actions</th>
           </tr>
         </thead>
 
         <tbody>
   {users.map(u => (
     <tr key={u.id}>
+      <td>{u.username ? u.username : "-"}</td>
       <td>{u.email}</td>
+
+      <td> {u.walletAddress ? (
+        
+    <div className="d-flex align-items-center gap-2">
+
+      <span style={{fontSize:18}}>🦊</span>
+<a
+      href={`https://etherscan.io/address/${u.walletAddress}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="wallet-link text-decoration-none"
+    >
+        {`${u.walletAddress.slice(0,6)}...${u.walletAddress.slice(-4)}`}
+</a>
+      <button
+        className="btn btn-sm btn-outline-secondary"
+        onClick={() => copyWallet(u.walletAddress)}
+      >
+        📋
+      </button>
+
+    </div>
+  ) : "-"}
+</td>
 
       <td>
         <span className={`badge ${u.role === "admin" ? "bg-danger" : "bg-primary"}`}>
@@ -112,7 +146,7 @@ const handleDeleteClick = (id) => {
 </tbody>
 
       </table>
-
+</div>
       <nav className="mt-4">
         <ul className="pagination">
 
@@ -141,6 +175,32 @@ const handleDeleteClick = (id) => {
         </ul>
       </nav>
 <ModalUser  onCreated={loadUsers} loadUsers={loadUsers}/>
+
+<Toast
+  onClose={() => setShowToast(false)}
+  show={showToast}
+  delay={2000}
+  autohide
+  style={{
+    position: "fixed",
+    bottom: 30,
+    right: 30,
+    zIndex: 9999,
+    minWidth: "260px",
+    border: "2px solid #22c55e",
+    background: "#1e2329",
+    color: "#22c55e",
+    fontSize: "16px"
+  }}
+>
+  <Toast.Body className="d-flex align-items-center gap-2">
+
+    <span style={{fontSize:18}}>✔</span>
+
+    Wallet copied
+
+  </Toast.Body>
+</Toast>
 
  <Modal show={showDelete} onHide={() => setShowDelete(false)}>
       <Modal.Header closeButton>

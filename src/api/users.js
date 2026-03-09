@@ -19,3 +19,9 @@ export const changeRoleUser = async (id, role) => {
     const response = await api.patch(`/users/${id}/role`, {role});
     return response.data;
 }
+
+export const connectAddress = async (address) => {
+  const response = await api.post("/users/wallet", {
+  walletAddress: address});
+    return response.data;
+}

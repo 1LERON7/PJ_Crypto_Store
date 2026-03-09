@@ -3,7 +3,7 @@ import ABI from "./abi.json";
 import { keccak256, toUtf8Bytes } from "ethers";
 import { confirmPayment } from "../api/payments";
 
-const CONTRACT_ADDRESS = "0xd938f9Ab699804C89BC4EA3FE3896F89f98Fe0eB";
+const CONTRACT_ADDRESS = "0xBD085265028885Ec8610B89ed3900aD5880Ffab9";
 
 export const getContract = async () => {
 

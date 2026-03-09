@@ -1,14 +1,25 @@
+.back-link {
+  transition: all .2s;
+}
+
+.back-link:hover {
+  color: #0d6efd;
+  transform: translateX(-2px);
+}
+
+
+
+
+
 .txt {
     color:aliceblue
 }
-
 
 .auth-card {
   background: var(--bs-body-bg);
   border: none;
   box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
-
 
 .bg-color {
     background: #1a1a1a;
