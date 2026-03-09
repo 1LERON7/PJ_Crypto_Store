@@ -107,7 +107,7 @@ namespace Crypto_Store.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(RegisterUserDto dto)
+        public async Task<IActionResult> Login(LoginUserDto dto)
         {
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
             if (user == null)
