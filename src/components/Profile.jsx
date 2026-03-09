@@ -7,6 +7,7 @@ import ProductCard from "./ProductsCard";
 import axios from "../api/axios";
 import { connectWallet } from "./MetaMask";
 import {connectAddress, updateProfile } from "../api/users";
+import "../components/style.css";
 
 import { Toast } from "react-bootstrap";
 // console.log("TOKEN:", localStorage.getItem("AccessToken"));
@@ -103,8 +104,9 @@ export default function Profile() {
   return (
     <>
     <BackHeader/>
+    
     <div className="container mt-5" style={{ maxWidth: "600px" }}>
-      <div className="card shadow-sm p-4">
+      <div className="card profile-card shadow-sm p-4">
 
         <h4 className="mb-4 text-center">Profile</h4>
 
@@ -114,7 +116,7 @@ export default function Profile() {
           <small className="text-muted">Bio</small>
 
           <textarea
-            className="form-control bg-dark text-light border-secondary"
+            className="form-control profile-input"
             maxLength={300}
             rows={3}
             value={bio}
@@ -133,7 +135,7 @@ export default function Profile() {
 
           <input
             type="text"
-            className="form-control bg-dark text-light border-secondary"
+            className="form-control profile-input"
             maxLength={35}
             value={tag}
             onChange={(e) => setTag(e.target.value)}
@@ -216,7 +218,7 @@ export default function Profile() {
         {favoriteProducts.map(product => (
           <div className="col-md-4 mb-3" key={product.id}>
             
-            <Link to={`/products/${product.id}`}className="d-block h-100 text-decoration-none text-dark">
+            <Link to={`/products/${product.id}`}className="d-block h-100 text-decoration-none">
                       <ProductCard product={product} />
             </Link>
 
@@ -226,7 +228,6 @@ export default function Profile() {
     </div>
         
       </div>
-      
     </div>
     <Toast
       onClose={() => setShowToastMessage(false)}

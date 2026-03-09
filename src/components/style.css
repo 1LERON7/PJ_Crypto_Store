@@ -1,13 +1,40 @@
+.profile-card{
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color);
+}
+
+.profile-input{
+  background: var(--bs-body-bg);
+  color: var(--bs-body-color);
+  border: 1px solid var(--bs-border-color);
+}
+
+
 .back-link {
   transition: all .2s;
 }
+.custom-header{
+  background: #1a1a1a;
+}
+
+/* .body-color-profile{
+  background: #121212;
+} */
 
 .back-link:hover {
   color: #0d6efd;
   transform: translateX(-2px);
 }
 
+body.dark {
+  background-color: #1e2329;
+  color: white;
+}
 
+body.light {
+  background-color: white;
+  color: black;
+}
 
 
 
@@ -58,5 +85,5 @@
   transition: background-color 0.2s ease, transform 0.15s ease;
 }
 .navbar {
-  background: #111;
+  background: #1a1a1a;
 }

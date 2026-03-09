@@ -17,6 +17,37 @@ export default function Register() {
     e.preventDefault();
 
     const emailParts = email.split("@");
+    const emailRegex = /^[a-zA-Z][a-zA-Z0-9._%+-]*@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+if (username.includes(" ")) {
+  setError("Username cannot contain spaces");
+  return;
+}
+
+if (!username.trim()) {
+  setError("Username is required");
+  return;
+}
+
+if (username.trim().length < 3) {
+  setError("Username must be at least 3 characters");
+  return;
+}
+
+if (username.length > 20) {
+  setError("Username must be less than 20 characters");
+  return;
+}
+
+if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+  setError("Username can contain only letters, numbers and underscore");
+  return;
+}
+
+if (!emailRegex.test(email)) {
+  setError("Invalid email format");
+  return;
+}
 
 if (emailParts[0].length < 3) {
   setError("Email must have at least 3 characters before @");
@@ -46,6 +77,7 @@ if (emailParts[0].length < 3) {
     setError("Password must contain letters and numbers");
     return;
   }
+  
 
     try {
       // ждем ответ от БД что мы зарегались
@@ -67,8 +99,6 @@ if (emailParts[0].length < 3) {
       setError(message);
     }
   };
-
-  
 
   return (
     <>
