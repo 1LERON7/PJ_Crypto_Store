@@ -10,13 +10,18 @@ export const createPayment = async (orderId) => {
   return data;
 };
 
-export const confirmPayment = async (paymentId, txHash) => {
+export const confirmPayment = async (productId, txHash) => {
   const token = localStorage.getItem("AccessToken");
 
   const { data } = await axios.post(
     `/api/payments/confirm`,
-    { paymentId, txHash },
+    { productId, txHash },
     {headers: { Authorization: `Bearer ${token}` }}
   );
   return data;
 };
+
+export const getPayment = async () => {
+  const response = await axios.get("/payments");
+    return response.data;
+}

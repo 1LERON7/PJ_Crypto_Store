@@ -19,7 +19,7 @@ export function AuthProvider({ children }) {
       setAuth(true);
       setRole(decoed.role);
     } catch (err) {
-      console.err("Invalid token", err);          //
+      console.error("Invalid token", err);          //
 
       localStorage.removeItem("AccessToken");
       localStorage.removeItem("RefreshToken");

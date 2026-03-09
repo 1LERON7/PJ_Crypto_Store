@@ -8,6 +8,9 @@ export const FavoritesProvider = ({ children }) => {
   // стан избранных продуктов
   const [favoriteIds, setFavoriteIds] = useState(new Set());
 
+  
+    
+
   useEffect(() => {
     const loadFavorites = async () => {
       try {
@@ -22,6 +25,10 @@ export const FavoritesProvider = ({ children }) => {
     setFavoriteIds(new Set()); // чистка при отсутствии токена
     return;
   }
+
+  // const token = localStorage.getItem("AccessToken");
+
+  // if (!token) return;
 
   loadFavorites();
 }, []);

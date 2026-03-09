@@ -91,7 +91,7 @@ export default function Login() {
           className="form-control mb-3"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
           required
         />
 

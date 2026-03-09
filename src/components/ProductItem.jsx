@@ -5,6 +5,7 @@ import BackHeader from "../components/HeaderBack";
 import Footer from "./Footer";
 
 import { buyProduct } from "../web3/contract";
+import { confirmPayment } from "../api/payments";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -30,6 +31,8 @@ const handleBuy = async () => {
   console.log(product);
 
   const txHash = await buyProduct(product.id, product.price);
+
+  // await confirmPayment(product.id, txHash)
 
   console.log("TX:", txHash);
 

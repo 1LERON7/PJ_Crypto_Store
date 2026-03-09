@@ -9,7 +9,6 @@ import { deleteProduct } from "../../api/products";
 export default function AdminProducts() {
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-
   const [products, setProducts] = useState([]);
   const [totalCount, setTotalCount] = useState(0);
   const [page, setPage] = useState(1);
@@ -117,7 +116,7 @@ export default function AdminProducts() {
 
 
                 <button 
-                className="btn btn-sm btn-outline-danger"
+                className="btn btn-danger btn-sm"
                 onClick={() => handleDelete(p.id)}
                 >Delete</button>
               </div>

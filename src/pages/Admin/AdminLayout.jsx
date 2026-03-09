@@ -37,6 +37,15 @@ export default function AdminLayout() {
               👤 Users
             </NavLink>
 
+            <NavLink
+              to="payments"
+              className={({ isActive }) =>
+                `btn text-start ${isActive ? "btn-success" : "btn-outline-light"}`
+              }
+            >
+              💲 Payments
+            </NavLink>
+
           </div>
         </div>
 

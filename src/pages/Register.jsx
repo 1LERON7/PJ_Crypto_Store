@@ -60,8 +60,8 @@ if (emailParts[0].length < 3) {
       navigate("/"); 
       
     } catch (err) {
-      console.log(err);
-      setError("Registration failed");
+      const message = err.response?.data || "Registration failed";
+      setError(message);
     }
   };
 
@@ -88,7 +88,7 @@ if (emailParts[0].length < 3) {
           className="form-control mb-3"
           placeholder="Email"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(e.target.value.toLowerCase())}
         />
 
         <input
