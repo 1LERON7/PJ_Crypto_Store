@@ -25,3 +25,15 @@ export const connectAddress = async (address) => {
   walletAddress: address});
     return response.data;
 }
+
+export const updateProfile = async (bio, tag) => {
+  const response = await api.put("/users/profile", {bio, tag});
+
+  return response.data;
+}
+
+export const updateNamespace = async (username) => {
+  const response = await api.put("/users/username", {username});
+
+  return response.data;
+}

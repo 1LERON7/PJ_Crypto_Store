@@ -74,6 +74,7 @@ export default function AdminProducts() {
       
      
 
+<div style={{ minHeight: "620px" }}>
       <table className="table table-striped table-hover align-middle shadow-sm">
         <thead>
           <tr>
@@ -128,6 +129,7 @@ export default function AdminProducts() {
         </tbody>
 
       </table>
+      </div>
       <nav className="mt-4">
   <ul className="pagination">
 

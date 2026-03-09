@@ -3,12 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { register, login } from "../api/auth";
 import HeaderAuth from "../components/HeaderAuth";
 import "../components/style.css";
+import { updateNamespace } from "../api/users";
 
 export default function Register() {
   const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
-  // const [username, setUsername] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
@@ -48,22 +49,26 @@ if (emailParts[0].length < 3) {
 
     try {
       // ждем ответ от БД что мы зарегались
-      await register({ email, password });
+      await register({ email, password, username });
 
       // после рега сразу логинимся
-      const result = await login({email, password});
+      // const result = await login({email, password});
 
-      // после лога дают токен, мы его присваиваем 
-      localStorage.setItem("AccessToken", result.accessToken);
-      localStorage.setItem("RefreshToken", result.refreshToken);
+      // // после лога дают токен, мы его присваиваем 
+      // localStorage.setItem("AccessToken", result.accessToken);
+      // localStorage.setItem("RefreshToken", result.refreshToken);
+
+      //await updateNamespace(username);
 
       navigate("/"); 
       
     } catch (err) {
-      const message = err.response?.data || "Registration failed";
+      const message = err.response?.data?.message || "Registration failed";
       setError(message);
     }
   };
+
+  
 
   return (
     <>
@@ -83,6 +88,15 @@ if (emailParts[0].length < 3) {
             {error}
           </div>
         )}
+
+
+        <input
+          className="form-control mb-3"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+
 
         <input
           className="form-control mb-3"

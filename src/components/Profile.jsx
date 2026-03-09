@@ -6,8 +6,9 @@ import { useFavorites } from "./FavoritesContext";
 import ProductCard from "./ProductsCard";
 import axios from "../api/axios";
 import { connectWallet } from "./MetaMask";
-import {connectAddress } from "../api/users";
+import {connectAddress, updateProfile } from "../api/users";
 
+import { Toast } from "react-bootstrap";
 // console.log("TOKEN:", localStorage.getItem("AccessToken"));
 
 // пропс продуктов
@@ -17,6 +18,9 @@ export default function Profile() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
 
+  const [showToast, setShowToast] = useState(false);
+  const [showToastMessage, setShowToastMessage] = useState(false);
+
   useEffect(() => {
     axios.get("/products").then(res=> setProducts(res.data.items));
   }, [])
@@ -25,8 +29,10 @@ export default function Profile() {
     favoriteIds.has(p.id)
   );
 
-    const [email, setEmail] = useState(null);
-    const [role, setRole] = useState("user");
+    const [user, setUser] = useState(null);
+    const [bio, setBio] = useState("");
+    const [tag, setTag] = useState("");
+
     const [createdAt, setCreatedAt] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -43,8 +49,10 @@ export default function Profile() {
         // Api запрос к Бэку
         profile().then(data => {
             // данные кладем в стан
-            setEmail(data.email);
-            setRole(data.role);
+            setUser(data);
+            setBio(data.bio || "");
+            setTag(data.tag || "");
+            
             console.log("createdAt from backend:", data.createdAt);
             setCreatedAt(data.createdAt);
         })
@@ -58,7 +66,7 @@ export default function Profile() {
         .finally(() => setLoading(false));
     }, [navigate]);
 
-   if (loading)
+   if (loading || !user)
   return (
     <div className="container mt-5 text-center">
       <div className="spinner-border text-success" role="status"></div>
@@ -73,8 +81,24 @@ export default function Profile() {
 
     console.log("Wallet:", address);
 
-    await connectAddress(address);
+    const resAddress = await connectAddress(address);
+    if(resAddress != null)
+      setShowToast(true);
   }
+
+   const handleSaveProfile = async () => {
+    try {
+      await updateProfile(bio, tag);
+
+      setUser({
+        ...user, bio, tag
+      });
+
+      setShowToastMessage(true);
+    }catch (err) {
+      console.error("Profile update failed", err);
+    }
+   }
 
   return (
     <>
@@ -84,19 +108,68 @@ export default function Profile() {
 
         <h4 className="mb-4 text-center">Profile</h4>
 
+      <h3 className="mb-1">{user.name}</h3>
+
         <div className="mb-3">
+          <small className="text-muted">Bio</small>
+
+          <textarea
+            className="form-control bg-dark text-light border-secondary"
+            maxLength={300}
+            rows={3}
+            value={bio}
+            onChange={(e) => setBio(e.target.value)}
+            placeholder="Tell something about yourself..."
+          />
+
+          <div className="text-end text-muted small">
+            {(bio?.length || 0)}/300
+          </div>
+
+        </div>
+
+        <div className="mb-3">
+          <small className="text-muted">Game Tag</small>
+
+          <input
+            type="text"
+            className="form-control bg-dark text-light border-secondary"
+            maxLength={35}
+            value={tag}
+            onChange={(e) => setTag(e.target.value)}
+            placeholder="Your gaming nickname"
+          />
+
+          <div className="text-end text-muted small">
+            {tag.length}/35
+          </div>
+
+          <div className="d-flex justify-content-end mt-3">
+            <button
+              className="btn btn-outline-success px-4 py-2 fw-semibold"
+              onClick={handleSaveProfile}
+              disabled={bio === user.bio && tag === user.tag}
+            >
+              Save
+            </button>
+          </div>
+
+          <hr className="my-4"/>
+        </div>
+
+        <div className="mb-2">
           <small className="text-muted">Email</small>
-          <div className="fs-5">{email}</div>
+          <div>{user.email}</div>
         </div>
 
 
 {/* ТОЛЬКО ДЛЯ АДМИНА ВИДНА РОЛЬ И КНОПКА */}
-    {role === "admin" && (
+    {user.role === "admin" && (
   <div className="mb-3">
     <small className="text-muted">Role</small>
 
     <div className="mb-2">
-      <span className="badge bg-danger">{role}</span>
+      <span className="badge bg-danger">{user.role}</span>
     </div>
 
     <Link to="/admin" className="btn btn-danger btn-sm">
@@ -109,7 +182,7 @@ export default function Profile() {
           <small className="text-muted">Account created</small>
           <div>
             {createdAt
-                ? new Date(createdAt).toLocaleString()
+                ? new Date(user.createdAt).toLocaleString()
                 : "—"}
             </div>
         </div>
@@ -155,7 +228,58 @@ export default function Profile() {
       </div>
       
     </div>
+    <Toast
+      onClose={() => setShowToastMessage(false)}
+      show={showToastMessage}
+      delay={2000}
+      autohide
+      style={{
+        position: "fixed",
+        bottom: 30,
+        right: 30,
+        zIndex: 9999,
+        minWidth: "260px",
+        border: "2px solid #22c55e",
+        background: "#1e2329",
+        color: "#22c55e",
+        fontSize: "16px"
+      }}
+    >
+      <Toast.Body className="d-flex align-items-center gap-2">
     
+        <span style={{fontSize:18}}>✔</span>
+    
+        Save
+    
+      </Toast.Body>
+    </Toast>
+
+
+    <Toast
+      onClose={() => setShowToast(false)}
+      show={showToast}
+      delay={2000}
+      autohide
+      style={{
+        position: "fixed",
+        bottom: 30,
+        right: 30,
+        zIndex: 9999,
+        minWidth: "260px",
+        border: "2px solid #22c55e",
+        background: "#1e2329",
+        color: "#22c55e",
+        fontSize: "16px"
+      }}
+    >
+      <Toast.Body className="d-flex align-items-center gap-2">
+    
+        <span style={{fontSize:18}}>✔</span>
+    
+        The wallet is connected
+    
+      </Toast.Body>
+    </Toast>
     </>
     
   );

@@ -74,16 +74,16 @@ const handleDeleteClick = (id) => {
       </div>
 
 <div style={{ minHeight: "620px" }}>
-      <table className="table table-dark table-striped table-hover align-middle shadow-sm">
+      <table className="table table-striped table-hover align-middle shadow-sm">
 
         <thead>
           <tr>
             <th style={{width:"15%"}}>Name</th>
             <th style={{width:"25%"}}>Email</th>
-            <th style={{width:"30%"}}>Wallet</th>
+            <th style={{width:"20%"}}>Wallet</th>
             <th style={{width:"10%"}}>Role</th>
             <th style={{width:"15%"}}>Created</th>
-            <th style={{width:"5%"}}>Actions</th>
+            <th style={{width:"15%"}}>Actions</th>
           </tr>
         </thead>
 
@@ -98,16 +98,16 @@ const handleDeleteClick = (id) => {
     <div className="d-flex align-items-center gap-2">
 
       <span style={{fontSize:18}}>🦊</span>
-<a
+    <a
       href={`https://etherscan.io/address/${u.walletAddress}`}
       target="_blank"
       rel="noopener noreferrer"
-      className="wallet-link text-decoration-none"
+      className="tx-hash wallet-link text-decoration-none"
     >
         {`${u.walletAddress.slice(0,6)}...${u.walletAddress.slice(-4)}`}
-</a>
+    </a>
       <button
-        className="btn btn-sm btn-outline-secondary"
+        className="copy-btn btn-sm btn-outline-secondary"
         onClick={() => copyWallet(u.walletAddress)}
       >
         📋

@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../api/api';
+import { Toast } from "react-bootstrap";
+import "./adminStyle.css";
 
 const AdminPayments = () => {
     const [payments, setPayments] = useState([]);
     const [totalCount, setTotalCount] = useState(0);
     const [page, setPage] = useState(1);
 
+const [showToast, setShowToast] = useState(false);
     const [totalAmount, setTotalAmount] = useState(0);
     const [averageAmount, setAverageAmount] = useState(0);
 
@@ -26,6 +29,11 @@ const AdminPayments = () => {
 }, [page]);
 
 const totalPages = Math.ceil(totalCount / pageSize);
+
+const copyWallet = (address) => {
+  navigator.clipboard.writeText(address);
+  setShowToast(true);
+};
 
     return (
         <>
@@ -71,6 +79,7 @@ const totalPages = Math.ceil(totalCount / pageSize);
 
 </div>
 
+<div style={{ minHeight: "520px" }}>
       <table className="table table-striped table-hover align-middle shadow-sm">
 
         <thead>
@@ -99,9 +108,26 @@ const totalPages = Math.ceil(totalCount / pageSize);
                 ETH {p.amount}
               </td>
 
-              <td className="font-monospace">
-                {p.txHash?.slice(0, 10)}...
-              </td>
+            
+              <td>
+  {p.txHash ? (
+    <div className="d-flex align-items-center gap-2">
+
+      <span className="tx-hash">
+        {`${p.txHash.slice(0,6)}...${p.txHash.slice(-4)}`}
+      </span>
+
+      <button
+        className="copy-btn"
+        onClick={() => copyWallet(p.txHash)}
+      >
+        📋
+      </button>
+
+    </div>
+  ) : "-"}
+</td>
+                
 
               <td>
                 {new Date(p.created).toLocaleString()}
@@ -112,7 +138,7 @@ const totalPages = Math.ceil(totalCount / pageSize);
         </tbody>
 
       </table>
-
+</div>
 
       <nav className="mt-4">
         <ul className="pagination">
@@ -143,8 +169,33 @@ const totalPages = Math.ceil(totalCount / pageSize);
 
         </ul>
       </nav>
+<Toast
+  onClose={() => setShowToast(false)}
+  show={showToast}
+  delay={2000}
+  autohide
+  style={{
+    position: "fixed",
+    bottom: 30,
+    right: 30,
+    zIndex: 9999,
+    minWidth: "260px",
+    border: "2px solid #22c55e",
+    background: "#1e2329",
+    color: "#22c55e",
+    fontSize: "16px"
+  }}
+>
+  <Toast.Body className="d-flex align-items-center gap-2">
 
+    <span style={{fontSize:18}}>✔</span>
+
+    Wallet copied
+
+  </Toast.Body>
+</Toast>
     </>
+    
     );
 }
 
