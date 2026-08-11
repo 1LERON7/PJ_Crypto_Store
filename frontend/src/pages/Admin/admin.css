@@ -1,0 +1,27 @@
+.description-cell {
+  max-width: 300px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.title-cell {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.admin-sidebar .btn {
+  transition: all 0.2s ease;
+}
+
+.admin-sidebar .btn:hover {
+  transform: translateX(4px);
+}
+
+.admin-sidebar .btn:hover {
+  background: #198754;
+  border-color: #198754;
+}

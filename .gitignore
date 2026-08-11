@@ -1,9 +1,19 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+
 # Visual Studio
 .vs/
 
-# Build
-bin/
-obj/
+# Node / React
+node_modules/
+dist/
 
-# User secrets / env
-appsettings.Development.json
+# Environment files
+.env
+**/.env
+
+# Logs
+*.log
