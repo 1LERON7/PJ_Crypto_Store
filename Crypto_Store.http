@@ -1,0 +1,6 @@
+@Crypto_Store_HostAddress = http://localhost:5237
+
+GET {{Crypto_Store_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
